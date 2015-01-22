@@ -14,6 +14,7 @@
 #import <Foundation/NSException.h>
 #import <AudioUnit/AudioUnit.h>
 
+double freq = 11.0;
 double theta = 0.0, theta_right = (2.0 * M_PI * 11 / 16000) * 2;
 AudioComponentInstance toneUnit;
 
@@ -32,8 +33,8 @@ OSStatus RenderTone(
     const double amplitude = 0.25;
     
     // Get the tone parameters out of the view controller
-    double theta_increment = 2.0 * M_PI * 11 / 16000;
-    double theta_increment_right = (2.0 * M_PI * 11 / 16000);
+    double theta_increment = 2.0 * M_PI * freq / 16000;
+    double theta_increment_right = (2.0 * M_PI * freq / 16000);
     
     // This is a mono tone generator so we only need the first buffer
     const int channel = 0;
@@ -68,8 +69,12 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        // insert code here...
-        NSLog(@"Hello, World!");
+        if (argc == 2) {
+            freq = atof(argv[1]);
+        }
+        
+        theta_right = (2.0 * M_PI * freq / 16000) * 2;
+
         if (toneUnit)
         {
             AudioOutputUnitStop(toneUnit);
