@@ -15,6 +15,7 @@
 #import <AudioUnit/AudioUnit.h>
 
 double freq = 11.0;
+double sampleRate = 48000.0;
 double theta = 0.0, theta_right = (2.0 * M_PI * 11 / 16000) * 2;
 AudioComponentInstance toneUnit;
 
@@ -33,8 +34,8 @@ OSStatus RenderTone(
     const double amplitude = 0.25;
     
     // Get the tone parameters out of the view controller
-    double theta_increment = 2.0 * M_PI * freq / 16000;
-    double theta_increment_right = (2.0 * M_PI * freq / 16000);
+    double theta_increment = 2.0 * M_PI * freq / sampleRate;
+    double theta_increment_right = (2.0 * M_PI * freq / sampleRate);
     
     // This is a mono tone generator so we only need the first buffer
     const int channel = 0;
@@ -73,7 +74,7 @@ int main(int argc, const char * argv[]) {
             freq = atof(argv[1]);
         }
         
-        theta_right = (2.0 * M_PI * freq / 16000) * 2;
+        theta_right = (2.0 * M_PI * freq / sampleRate) * 2;
 
         if (toneUnit)
         {
@@ -140,7 +141,7 @@ void createToneUnit() {
     const int four_bytes_per_float = 4;
     const int eight_bits_per_byte = 8;
     AudioStreamBasicDescription streamFormat;
-    streamFormat.mSampleRate = 16000;
+    streamFormat.mSampleRate = sampleRate;
     streamFormat.mFormatID = kAudioFormatLinearPCM;
     streamFormat.mFormatFlags =
     kAudioFormatFlagsNativeFloatPacked | kAudioFormatFlagIsNonInterleaved;
